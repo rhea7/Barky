@@ -1,85 +1,33 @@
+Description:
+This test file includes unit tests for the Barky bookmarking application
 
-# APP Code CIDM 6330 Spring 2023
+Dependencies:
+This test file requires the Barky bookmarking application to be installed
 
-[Harry Percival and Bob Gregory's Code Repository for the Book](https://github.com/cosmicpython/code.git)
-Note, the full contents of the book itself is available at this link.
+Instructions:
+To run the tests, navigate to the directory containing the test file and run python -m unittest
 
-git clone --branch chapter_01_domain_model https://github.com/cosmicpython/code.git
+Results:
+Each test checks a different application functionality, such as adding bookmarks, deleting bookmarks, and searching for bookmarks. All tests should pass if the application is functioning correctly. Such as:
 
-# Components of this Repo:
+test_add_bookmark: Tests that a bookmark can be added to the database and the number of bookmarks increases by 1.
+test_delete_bookmark: Tests that a bookmark can be deleted from the database and the number of bookmarks decreases by 1.
+test_edit_bookmark: Tests that a bookmark's title can be updated in the database.
+test_list_bookmarks: Tests that all bookmarks in the database can be listed and the correct number of bookmarks are returned.
+test_search_bookmarks: Tests that bookmarks containing a given search term are returned.
+test_add_duplicate_bookmark: Tests that try to add a bookmark already existing in the database raise an exception.
+test_list_bookmarks_empty and test_search_bookmarks_empty: Tests check that the list and search functions return an empty list when there are no bookmarks in the database.
 
-* [Acme](acme/README.MD) - Acme crew scheduling example. (updated in 2023)
-* [APP](APP/README.MD) - Arhictecture Patterns in Python - Percival and Gregory
-* [Barky](Barky/README.MD) - a derivative of [Dane Hillard's Bark example](https://github.com/daneah/practices-of-the-python-pro), which has been transformed to follow along with Percival and Gregory's material
-* [flask-tutorial](flask-tutorial/myproject/README.MD) - The Flask 2.0 tutorial. (new in 2022)
-* [FlaskSA](FlaskSA/README.MD) - code related to Flask and SQLAlchemy.
-* [PyTesting](PyTesting/README.MD) - pytest basics
-* [Testing](Testing/README.MD) - Separate materials on testing in Python.
+test_edit_nonexistent_bookmark and test_delete_nonexistent_bookmark: Tests check that the edit and delete functions raise a Bookmark.DoesNotExist exception when attempting to edit or delete a bookmark that does not exist in the database.
 
+Edge Cases
+Edge cases are cases that are less common or less expected than the typical behavior of the application. Adding these extra test cases helps ensure that the Barky app is functioning properly in these edge cases as well.
 
-# Notes
-March 2023: The API was updated to more explicitly show Flask integration using Blueprints.
+These are a few examples of edge cases that are tested here:
 
-## Git Crash Course for Begginers
-
-[Good resource](https://gist.github.com/brandon1024/14b5f9fcfd982658d01811ee3045ff1e).
-
-## Visual Studio Code Python Extension
-
-It may become necessary for you to encourage the Python and Pylance extensions on how to find your virtual environment in VSCode.
-
-The following can be added to a 'settings.json' file to accompany your project:
-
-`"python.pythonPath": "/my/project/path/.venv/bin/python",`
-
-## PyPi Packages
-
-PyPi packages used:
-* setuptools
-* pytest
-* coverage
-
-## Percival's First Book on TDD
-
-[Test-Driven Development with Python](https://www.obeythetestinggoat.com/)
-
-## Regarding Barky
-
-There are four branches related to Barky that show the progression in Barky in consideration of the design principles we are studying.
-
-You can see these branches with the `git branch` command.
-
-## Useful Architectural Structures
-
-## UML Notes
-
-### Use Case Diagrams
-
-[What's is the difference between include and extend in use case diagram?](https://stackoverflow.com/a/4472770)
-
-Here’s an approach checked against Jacobson, Fowler, Larmen and 10 other references.
-
-**Relationships are dependencies**
-The key to Include and extend use case relationships is to realize that, common with the rest of UML, the dotted arrow between use cases is a dependency relationship. I’ll use the terms ‘base’, ‘included’ and ‘extending’ to refer to the use case roles.
-
-***include***
-A base use case is dependent on the included use case(s); without it/them the base use case is incomplete as the included use case(s) represent sub-sequences of the interaction that may happen always OR sometimes. (This is contrary to a popular misconception about this, what your use case suggests always happens in the main scenario and sometimes happens in alternate flows simply depends on what you choose as your main scenario; use cases can easily be restructured to represent a different flow as the main scenario and this should not matter).
-
-In the best practice of one way dependency the base use case knows about (and refers to) the included use case, but the included use case shouldn’t ‘know’ about the base use case. This is why included use cases can be: a) base use cases in their own right and b) shared by a number of base use cases.
-
-***extend***
-The extending use case is dependent on the base use case; it literally extends the behavior described by the base use case. The base use case should be a fully functional use case in its own right (‘include’s included of course) without the extending use case’s additional functionality.
-
-Extending use cases can be used in several situations:
-
-The base use case represents the “must have” functionality of a project while the extending use case represents optional (should/could/want) behavior. This is where the term optional is relevant – optional whether to build/deliver rather than optional whether it sometimes runs as part of the base use case sequence.
-In phase 1 you can deliver the base use case which meets the requirements at that point, and phase 2 will add additional functionality described by the extending use case. This can contain sequences that are always or sometimes performed after phase 2 is delivered (again contrary to popular misconception).
-It can be used to extract out subsequences of the base use case, especially when they represent ‘exceptional’ complex behavior with its own alternative flows.
-One important aspect to consider is that the extending use case can ‘insert’ behavior in several places in the base use case’s flow, not just in a single place as an included use case does. For this reason, it is highly unlikely that an extending use case will be suitable to extend more than one base use case.
-
-As to dependency, the extending use case is dependent on the base use case and is again a one-way dependency, i.e. the base use case doesn’t need any reference to the extending use case in the sequence. That doesn’t mean you can’t demonstrate the extension points or add a x-ref to the extending use case elsewhere in the template, but the base use case must be able to work without the extending use case.
-
-**SUMMARY**
-I hope I’ve shown that the common misconception of “includes are always, extends are sometimes” is either wrong or at best simplistic. This version actually makes more sense if you consider all the issues about the directionality of the arrows the misconception presents – in the correct model it’s just dependency and doesn’t potentially change if you refactor the use case contents.
-
+Adding a duplicate bookmark
+Attempting to edit a nonexistent bookmark
+Attempting to delete a nonexistent bookmark
+Listing bookmarks when there are no bookmarks in the database
+Searching for bookmarks when there are no bookmarks in the database
 

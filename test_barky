@@ -1,0 +1,173 @@
+import unittest
+from barky.add import add_bookmark
+from barky.delete import delete_bookmark
+from barky.edit import edit_bookmark
+from barky.list import list_bookmarks
+from barky.search import search_bookmarks
+from barky.models import Bookmark
+
+
+class TestBarky(unittest.TestCase):
+    def test_add_bookmark(self):
+        # Arrange
+        bookmark = Bookmark(
+            title="Test Bookmark",
+            url="http://example.com",
+            description="This is a test bookmark",
+        )
+        initial_count = len(list(Bookmark.select()))
+
+        # Act
+        add_bookmark(bookmark)
+
+        # Assert
+        final_count = len(list(Bookmark.select()))
+        self.assertEqual(final_count, initial_count + 1)
+
+    def test_delete_bookmark(self):
+        # Arrange
+        bookmark = Bookmark(
+            title="Test Bookmark",
+            url="http://example.com",
+            description="This is a test bookmark",
+        )
+        add_bookmark(bookmark)
+        initial_count = len(list(Bookmark.select()))
+
+        # Act
+        delete_bookmark(bookmark)
+
+        # Assert
+        final_count = len(list(Bookmark.select()))
+        self.assertEqual(final_count, initial_count - 1)
+
+    def test_edit_bookmark(self):
+        # Arrange
+        bookmark = Bookmark(
+            title="Test Bookmark",
+            url="http://example.com",
+            description="This is a test bookmark",
+        )
+        add_bookmark(bookmark)
+
+        # Act
+        bookmark.title = "Updated Bookmark Title"
+        edit_bookmark(bookmark)
+
+        # Assert
+        updated_bookmark = Bookmark.get_by_id(bookmark.id)
+        self.assertEqual(updated_bookmark.title, "Updated Bookmark Title")
+
+    def test_list_bookmarks(self):
+        # Arrange
+        bookmark1 = Bookmark(
+            title="Bookmark 1",
+            url="http://example.com/1",
+            description="This is bookmark 1",
+        )
+        bookmark2 = Bookmark(
+            title="Bookmark 2",
+            url="http://example.com/2",
+            description="This is bookmark 2",
+        )
+        add_bookmark(bookmark1)
+        add_bookmark(bookmark2)
+
+        # Act
+        bookmarks = list_bookmarks()
+
+        # Assert
+        self.assertEqual(len(bookmarks), 2)
+        self.assertIn(bookmark1, bookmarks)
+        self.assertIn(bookmark2, bookmarks)
+
+    def test_search_bookmarks(self):
+        # Arrange
+        bookmark1 = Bookmark(
+            title="Bookmark 1",
+            url="http://example.com/1",
+            description="This is bookmark 1",
+        )
+        bookmark2 = Bookmark(
+            title="Bookmark 2",
+            url="http://example.com/2",
+            description="This is bookmark 2",
+        )
+        add_bookmark(bookmark1)
+        add_bookmark(bookmark2)
+
+        # Act
+        search_results = search_bookmarks("bookmark 1")
+
+        # Assert
+        self.assertEqual(len(search_results), 1)
+        self.assertIn(bookmark1, search_results)
+
+    def test_add_duplicate_bookmark(self):
+        # Arrange
+        bookmark = Bookmark(
+            title="Test Bookmark",
+            url="http://example.com",
+            description="This is a test bookmark",
+        )
+        add_bookmark(bookmark)
+        initial_count = len(list(Bookmark.select()))
+
+        # Act
+        add_bookmark(bookmark)
+
+        # Assert
+        final_count = len(list(Bookmark.select()))
+        self.assertEqual(final_count, initial_count)
+
+
+    
+    def test_list_bookmarks_empty(self):
+        # Arrange
+        Bookmark.delete().execute()
+        
+        # Act
+        bookmarks = list_bookmarks()
+        
+        # Assert
+        self.assertEqual(len(bookmarks), 0)
+        
+    def test_search_bookmarks_empty(self):
+        # Arrange
+        Bookmark.delete().execute()
+        
+        # Act
+        search_results = search_bookmarks("example")
+        
+        # Assert
+        self.assertEqual(len(search_results), 0)
+        
+    def test_edit_nonexistent_bookmark(self):
+        # Arrange
+        bookmark = Bookmark(
+            title="Test Bookmark",
+            url="http://example.com",
+            description="This is a test bookmark",
+        )
+        Bookmark.delete().execute()
+        
+        # Act
+        with self.assertRaises(Bookmark.DoesNotExist):
+            edit_bookmark(bookmark)
+        
+        # Assert (none needed)
+        
+    def test_delete_nonexistent_bookmark(self):
+        # Arrange
+        bookmark = Bookmark(
+            title="Test Bookmark",
+            url="http://example.com",
+            description="This is a test bookmark",
+        )
+        Bookmark.delete().execute()
+        
+        # Act
+        with self.assertRaises(Bookmark.DoesNotExist):
+            delete_bookmark(bookmark)
+        
+        # Assert (none needed)
